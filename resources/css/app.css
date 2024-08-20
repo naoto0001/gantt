@@ -1,0 +1,43 @@
+.main {
+    height: 100vh;
+    width: 100vw;
+}
+
+.contents-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: start;
+    /* height: 40vh; */
+    width: 100vw;
+}
+
+.input-wrapper{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 25vw;
+}
+
+.input-wrapper h2 {
+    margin-bottom: 0.5rem;
+}
+
+.inputs {
+    margin: 0 1rem 1rem 1rem;
+    width: 15vw;
+}
+
+
+.gantt-wrap {
+    width: 65vw; 
+}
+
+.gantt-container {
+    width: 65vw; 
+    margin: 0;
+}
+
+.gantt .bar-wrapper .bar-progress{
+    fill: #007bff;
+}
