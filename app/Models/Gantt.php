@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Gant extends Model
+class Gantt extends Model
 {
     protected $table = 'gantt'; // Specify the correct table name
 
     protected $fillable = [
-        'name', 'description', 'start', 'end', 'progress'
+        'name', 'start', 'end', 'progress', 'client', 'parts'
     ];    // public $timestamps = false;
 }

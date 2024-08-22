@@ -1,24 +1,17 @@
-
-// // if (tasks.length !== 0) {
-// let gantt = new Gantt("#gantt", tasks, {
-//   on_click: (task) => {
-//     console.log(task.description);
-//   },
-//   on_date_change: (task, start, end) => {
-//     console.log(`${task.name}: change date to ${start} - ${end}`);
-//     ajaxRequest(task, start, end);
-//   },
-//   on_progress_change: (task, progress) => {
-//     console.log(`${task.name}: change progress to ${progress}%`);
-//   },
-//   view_mode: 'Day',
-//   date_format: "YYYY-MM-DD",
-//   header_height: 50,
-// });
-// };
-
-// let gantt = new Gantt("#gantt", [], {});
-
+const monthNames = {
+  "January": "1月",
+  "February": "2月",
+  "March": "3月",
+  "April": "4月",
+  "May": "5月",
+  "June": "6月",
+  "July": "7月",
+  "August": "8月",
+  "September": "9月",
+  "October": "10月",
+  "November": "11月",
+  "December": "12月"
+};
 
 const ajaxGet = function() {
   return $.ajax({
@@ -30,7 +23,7 @@ const ajaxGet = function() {
 
 ajaxGet()
   .done((res) => {
-    console.log('Fetched data:', res);
+    // console.log('Fetched data:', res);
     const getTasks = res; // Assign the response to tasks
     let res_tasks = getTasks.filter(task => {
       if (!task.hasOwnProperty('id') || !task.hasOwnProperty('name') || !task.hasOwnProperty('start') || !task.hasOwnProperty('end')) {
@@ -44,46 +37,20 @@ ajaxGet()
       console.error('No valid res_tasks to display.');
       return;
     }
-
-    // Initialize the Gantt chart with the fetched res_tasks
-
-    console.log('Valid res_tasks:', res_tasks); // Log the valid res_tasks
-
-    // let gantt = ("#gantt", res_tasks, {
-    //     on_click: (task) => {
-    //       console.log(task.description);
-    //     },
-    //     on_date_change: (task, start, end) => {
-    //       console.log(`${task.name}: change date to ${start} - ${end}`);
-    //       // ajaxRequest(task, start, end);
-    //     },
-    //     on_progress_change: (task, progress) => {
-    //       console.log(`${task.name}: change progress to ${progress}%`);
-    //     },
-    //     view_mode: 'Day',
-    //     date_format: "YYYY-MM-DD",
-    //     header_height: 50,
-    //   });
-    console.log(res_tasks);
-    // gantt.tasks[0].name = "資材発注2";
-    // console.log(gantt.tasks[0].name);
-    // gantt = new Gantt("#gantt", gantt.tasks);
     
     let tasks = [];
     res_tasks.forEach(task => {
       tasks.push({
         id: String(task.id),
         name: task.name,
-        description: task.description,
         start: task.start,
         end: task.end,
         progress: task.progress,
       });
     });
-    console.log(tasks);
     if (tasks && tasks.length > 0) {
         try {
-          console.log("Initializing Gantt chart with tasks:", tasks);
+          // console.log("Initializing Gantt chart with tasks:", tasks);
           initializeGantt(tasks);
         } catch (error) {
           console.error("Error initializing Gantt chart:", error);
@@ -104,65 +71,156 @@ ajaxGet()
         },
         on_date_change: (task, start, end) => {
           console.log(`${task.name}: change date to ${start} - ${end}`);
-          ajaxRequest(task, start, end);
+          ajaxRequestDate(task, start, end);
         },
         on_progress_change: (task, progress) => {
           console.log(`${task.name}: change progress to ${progress}%`);
+          ajaxRequestProgress(task, progress);
         },
         view_mode: 'Day',
         date_format: "YYYY-MM-DD",
-        header_height: 50,
+        header_height: 49,
+        bar_height: 15,
       });
+
+      document.querySelectorAll('.upper-text').forEach(element => {
+        const englishMonth = element.textContent.trim();
+        if (monthNames[englishMonth]) {
+            element.textContent = monthNames[englishMonth];
+        }
+    });
+
     } catch (error) {
       console.error("Error initializing Gantt chart:", error);
     }
   };
 
-const ajaxRequest = (task, start, end) => {
-    $.ajax({
-      type: "POST",
-      url: "/gantt",
-      dataType: "json",
-      data: {
-          "_token": $('meta[name="csrf-token"]').attr('content'), // Fetch CSRF token from meta tag
-          id: Number(task.id),
-          start: start,
-          end: end,
-      },
-    })
-    .done(function(res) {
-      console.log(res.gantt);
-      alert("Update method reached: " + JSON.stringify(res));
-      // gantt = new Gantt("#gantt", tasks);
-    })
-    .fail(function(jqXHR, textStatus, errorThrown) {
-      console.error("Ajax request failed:", jqXHR,textStatus, errorThrown);
-      alert("Update method failed: " + JSON.stringify(jqXHR));
-    });
-};
-        
-    function changeValue(event) {
-      console.log(event.currentTarget.value);
-      value = event.currentTarget.value;
-    };
-  
-    export function recerveValue(){
-      tasks[0].name = value;
-      console.log(tasks[0].name);
-      let gantt = new Gantt("#gantt", tasks);
-      return gantt;
-    };
-
-    export function addValue(){
-      console.log(tasks.length);
-      tasks.push({
-        id: '5',
-        name: '資材発注',
-        description: '資材の在庫を確認して発注する',
-        start: '2024-08-16',
-        end: '2024-08-25',
-        progress: 20,
+  const ajaxRequestDate = (task, start, end) => {
+      $.ajax({
+        type: "POST",
+        url: "/gantt_update",
+        dataType: "json",
+        data: {
+            "_token": $('meta[name="csrf-token"]').attr('content'),
+            id: Number(task.id),
+            start: start,
+            end: end,
+        },
+      })
+      .done(function(res) {
+        console.log(res.gantt);
+        alert("日付が変更されました。");
+        window.location.reload();
+      })
+      .fail(function(jqXHR, textStatus, errorThrown) {
+          console.error("Ajax request failed:", jqXHR, textStatus, errorThrown);
+          alert("Update method failed: " + JSON.stringify(jqXHR));
       });
-      gantt = new Gantt("#gantt", tasks);
-      return gantt;
-    };
+  };
+
+  const ajaxRequestProgress = (task, progress) => {
+      $.ajax({
+        type: "POST",
+        url: "/gantt_update",
+        dataType: "json",
+        data: {
+            "_token": $('meta[name="csrf-token"]').attr('content'),
+            id: Number(task.id),
+            progress: progress,
+        },
+      })
+      .done(function(res) {
+        if (!res || $.isEmptyObject(res)) {
+          console.error("Empty response received from server");
+          return;
+      }
+        
+        alert("進捗が更新されました。");
+        window.location.reload();
+      })
+      .fail(function(jqXHR, textStatus, errorThrown) {
+          console.error("Ajax request failed:", jqXHR, textStatus, errorThrown);
+          console.error("Response text:", jqXHR.responseText); 
+          alert("Update method failed: " + JSON.stringify(jqXHR));
+      });
+  };
+
+  $(document).ready(function() {
+    const form = $('#ganttForm');
+    const submitButton = $('#submitButton');
+
+    submitButton.prop('disabled', true);
+
+    form.on('input', function() {
+        let allFilled = true;
+        form.find('input[required]').each(function() {
+            if ($(this).val() === '') {
+                allFilled = false;
+                return false;
+            }
+        });
+
+        submitButton.prop('disabled', !allFilled);
+    });
+
+    form.on('submit', function(e) {
+        e.preventDefault();
+
+        $.ajax({
+            url: $(this).attr('action'),
+            method: 'POST',
+            data: $(this).serialize(),
+            success: function(response) {                
+                alert("依頼を作成しました。");
+                window.location.reload();
+            },
+            error: function(xhr) {
+                // エラー時の処理
+                var errors = xhr.responseJSON.errors;
+                var errorMessages = '';
+
+                $.each(errors, function(key, value) {
+                    errorMessages += value[0] + '<br>';
+                });
+
+                $('#errorAlert').html(errorMessages).show();
+            }
+        });
+    });
+});
+
+const deleteTask = (id) => {
+  $.ajax({
+    type: "POST",
+    url: "/gantt_destroy",
+    dataType: "json",
+    data: {
+        "_token": $('meta[name="csrf-token"]').attr('content'),
+        id: id,
+    },
+  })
+  .done(function(res) {
+    console.log(res.gantt);
+    alert("消去しました。");
+    window.location.reload();
+  })
+  .fail(function(jqXHR, textStatus, errorThrown) {
+      console.error("Ajax request failed:", jqXHR, textStatus, errorThrown);
+      alert("Delete method failed: " + JSON.stringify(jqXHR));
+  });
+};
+
+export function deleteOn(id) {
+  console.log(id);
+  if (id) {
+      deleteTask(id);
+      return
+    } else {
+      console.error("No task ID provided to delete.");
+      return
+  };
+};
+
+
+  
+

@@ -3,32 +3,17 @@
     width: 100vw;
 }
 
-.contents-wrapper {
-    display: flex;
-    flex-direction: row;
-    justify-content: start;
-    align-items: start;
-    /* height: 40vh; */
-    width: 100vw;
+.bg-blue-100 {
+    background-color: #E7F1FF; /* Replace with your desired blue shade */
+}
+.bg-blue-200 {
+    background-color: #90cdf4; /* Replace with your desired blue shade */
 }
 
-.input-wrapper{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 25vw;
+.gantt {
+    height: auto;
+    overflow-y: auto;
 }
-
-.input-wrapper h2 {
-    margin-bottom: 0.5rem;
-}
-
-.inputs {
-    margin: 0 1rem 1rem 1rem;
-    width: 15vw;
-}
-
-
 .gantt-wrap {
     width: 65vw; 
 }

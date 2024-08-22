@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('gantt', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('description');
+            $table->string('name');            
             $table->date('start');
             $table->date('end');
             $table->integer('progress');
+            $table->string('client');
+            $table->string('parts');
             $table->timestamps();
         });
     }
