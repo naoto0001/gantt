@@ -45,7 +45,7 @@ ajaxGet()
         name: task.name,
         start: task.start,
         end: task.end,
-        progress: task.progress,
+        // progress: task.progress,
       });
     });
     if (tasks && tasks.length > 0) {
@@ -73,10 +73,10 @@ ajaxGet()
           console.log(`${task.name}: change date to ${start} - ${end}`);
           ajaxRequestDate(task, start, end);
         },
-        on_progress_change: (task, progress) => {
-          console.log(`${task.name}: change progress to ${progress}%`);
-          ajaxRequestProgress(task, progress);
-        },
+        // on_progress_change: (task, progress) => {
+        //   console.log(`${task.name}: change progress to ${progress}%`);
+        //   ajaxRequestProgress(task, progress);
+        // },
         view_mode: 'Day',
         date_format: "YYYY-MM-DD",
         header_height: 49,
@@ -114,33 +114,6 @@ ajaxGet()
       })
       .fail(function(jqXHR, textStatus, errorThrown) {
           console.error("Ajax request failed:", jqXHR, textStatus, errorThrown);
-          alert("Update method failed: " + JSON.stringify(jqXHR));
-      });
-  };
-
-  const ajaxRequestProgress = (task, progress) => {
-      $.ajax({
-        type: "POST",
-        url: "/gantt_update",
-        dataType: "json",
-        data: {
-            "_token": $('meta[name="csrf-token"]').attr('content'),
-            id: Number(task.id),
-            progress: progress,
-        },
-      })
-      .done(function(res) {
-        if (!res || $.isEmptyObject(res)) {
-          console.error("Empty response received from server");
-          return;
-      }
-        
-        alert("進捗が更新されました。");
-        window.location.reload();
-      })
-      .fail(function(jqXHR, textStatus, errorThrown) {
-          console.error("Ajax request failed:", jqXHR, textStatus, errorThrown);
-          console.error("Response text:", jqXHR.responseText); 
           alert("Update method failed: " + JSON.stringify(jqXHR));
       });
   };

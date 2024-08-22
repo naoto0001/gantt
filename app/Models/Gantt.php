@@ -10,6 +10,6 @@ class Gantt extends Model
     protected $table = 'gantt'; // Specify the correct table name
 
     protected $fillable = [
-        'name', 'start', 'end', 'progress', 'client', 'parts'
+        'name', 'start', 'end', 'client', 'parts'
     ];    // public $timestamps = false;
 }

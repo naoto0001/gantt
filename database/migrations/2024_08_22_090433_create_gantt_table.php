@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('name');            
             $table->date('start');
             $table->date('end');
-            $table->integer('progress');
             $table->string('client');
             $table->string('parts');
             $table->timestamps();

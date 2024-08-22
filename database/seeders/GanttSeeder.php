@@ -21,7 +21,6 @@ class GanttSeeder extends Seeder
                 'name' => '作業名' . $i,
                 'start' => date('Y-m-d', strtotime('2024-07-01 + ' . rand(0, 30) . ' days')),
                 'end' => date('Y-m-d', strtotime('2024-08-01 + ' . rand(0, 30) . ' days')),
-                'progress' => rand(0, 100),
                 'client' => '依頼者' . $i,
                 'parts' => '部品' . $i,
                 'created_at' => now(),

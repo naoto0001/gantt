@@ -23,6 +23,6 @@
     margin: 0;
 }
 
-.gantt .bar-wrapper .bar-progress{
+.gantt .bar-wrapper .bar{
     fill: #007bff;
 }

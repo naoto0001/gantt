@@ -24,7 +24,7 @@ class GanttController extends Controller
 
     public function getdata()
     {
-        $gantt = DB::table('gantt')->select('id', 'name', 'start', 'end', 'progress', 'client', 'parts')->get()->toArray();
+        $gantt = DB::table('gantt')->select('id', 'name', 'start', 'end', 'client', 'parts')->get()->toArray();
 
         header('Content-type: application/json');
         
@@ -61,22 +61,17 @@ class GanttController extends Controller
         $end = $requestData['end'] ?? [];
         $client = $requestData['client'] ?? [];
         $parts = $requestData['parts'] ?? [];
-        $progress = 10;
 
         $gantt = new Gantt();
         $gantt->name = $name;
         $gantt->start = $start;
         $gantt->end = $end;
-        $gantt->progress = $progress;
+
         $gantt->client = $client;
         $gantt->parts = $parts;
 
         $gantt->save();
 
-        // will delete
-        $gantt = DB::table('gantt')->select('id', 'name', 'start', 'end', 'progress', 'client', 'parts')->get()->toArray();
-
-        // return redirect('/gantt');
         return response()->json([
             'message' => 'Gantt updated successfully',
             'gantt' => $gantt,
@@ -114,25 +109,7 @@ class GanttController extends Controller
     {
     
         $requestData = $request->all();
-    if (isset($requestData['progress'])) {
-        $id = $requestData['id'] ?? null;
-        $progress = $requestData['progress'] ?? null;
-
-        if ($id !== null && $progress !== null) {
-            $gantt_save = Gantt::find($id);
-            $gantt_save->progress = $progress;
-            $gantt_save->save();
-
-            return response()->json([
-                'message' => 'Progress updated successfully',
-                'gantt' => $gantt_save
-            ], 200);
-        } else {
-            return response()->json([
-                'message' => 'Invalid data provided',
-            ], 400);
-        }
-    } else {
+    
         $id = $requestData['id'] ?? null;
         $start = $requestData['start'] ?? null;
         $end = $requestData['end'] ?? null;
@@ -153,11 +130,6 @@ class GanttController extends Controller
                 'message' => 'Start and end dates updated successfully',
                 'gantt' => $gantt_save
             ], 200);
-        } else {
-            return response()->json([
-                'message' => 'Invalid data provided',
-            ], 400);
-        }
     }
 }
 
